@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane stylesheets="@styles.css" style="-fx-border-color: white;" xmlns="http://javafx.com/javafx/8.0.171"
+            xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <VBox alignment="TOP_CENTER" spacing="10.0">
+         <children>
+            <Label id="header" text="HOW TO PLAY" />
+            <Separator prefWidth="200.0" />
+            <VBox alignment="TOP_CENTER" spacing="10.0">
+               <children>
+                  <Label text="Try to guess the WORKLE in six tries." />
+                  <Label text="Each guess must be a valid 5-letter word." />
+                  <Label prefWidth="400.0" text="After submitting your guess, the color of the letters will change to indicate how close you were to solving the word." textAlignment="CENTER" wrapText="true" />
+                  <Label text="A new WORKLE is available every day." />
+               </children>
+            </VBox>
+            <Separator prefWidth="200.0" />
+            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="20.0">
+               <children>
+                  <VBox alignment="CENTER" spacing="5.0">
+                     <children>
+                        <HBox alignment="CENTER" spacing="5.0">
+                           <children>
+                              <HBox fx:id="tileCorrect" prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: linear-gradient(to top, #66ba45, #34495e);" styleClass="game-tile">
+                                 <children>
+                                    <Label text="W" />
+                                 </children>
+                              </HBox>
+                              <HBox prefHeight="100.0" prefWidth="200.0" styleClass="game-tile">
+                                 <children>
+                                    <Label text="E" />
+                                 </children>
+                              </HBox>
+                              <HBox prefHeight="100.0" prefWidth="200.0" styleClass="game-tile">
+                                 <children>
+                                    <Label text="A" />
+                                 </children>
+                              </HBox>
+                              <HBox prefHeight="100.0" prefWidth="200.0" styleClass="game-tile">
+                                 <children>
+                                    <Label text="R" />
+                                 </children>
+                              </HBox>
+                              <HBox prefHeight="100.0" prefWidth="200.0" styleClass="game-tile">
+                                 <children>
+                                    <Label text="Y" />
+                                 </children>
+                              </HBox>
+                           </children>
+                        </HBox>
+                        <Label text="The letter W is in the word and in the correct location." />
+                     </children>
+                  </VBox>
+                  <VBox alignment="CENTER" spacing="5.0">
+                     <children>
+                        <HBox alignment="CENTER" spacing="5.0">
+                           <children>
+                              <HBox fx:id="tileCorrect1" prefHeight="100.0" prefWidth="200.0" styleClass="game-tile">
+                                 <children>
+                                    <Label text="P" />
+                                 </children>
+                              </HBox>
+                              <HBox prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: linear-gradient(to top, #c6c25e, #34495e);" styleClass="game-tile">
+                                 <children>
+                                    <Label text="I" />
+                                 </children>
+                              </HBox>
+                              <HBox fx:id="tileWrongLocation" prefHeight="100.0" prefWidth="200.0" styleClass="game-tile">
+                                 <children>
+                                    <Label text="L" />
+                                 </children>
+                              </HBox>
+                              <HBox prefHeight="100.0" prefWidth="200.0" styleClass="game-tile">
+                                 <children>
+                                    <Label text="L" />
+                                 </children>
+                              </HBox>
+                              <HBox prefHeight="100.0" prefWidth="200.0" styleClass="game-tile">
+                                 <children>
+                                    <Label text="S" />
+                                 </children>
+                              </HBox>
+                           </children>
+                        </HBox>
+                        <Label text="The letter I is in the word, but in the wrong location." />
+                     </children>
+                  </VBox>
+                  <VBox alignment="CENTER" spacing="5.0">
+                     <children>
+                        <HBox alignment="CENTER" spacing="5.0">
+                           <children>
+                              <HBox fx:id="tileCorrect2" prefHeight="100.0" prefWidth="200.0" styleClass="game-tile">
+                                 <children>
+                                    <Label text="V" />
+                                 </children>
+                              </HBox>
+                              <HBox prefHeight="100.0" prefWidth="200.0" styleClass="game-tile">
+                                 <children>
+                                    <Label text="A" />
+                                 </children>
+                              </HBox>
+                              <HBox prefHeight="100.0" prefWidth="200.0" styleClass="game-tile">
+                                 <children>
+                                    <Label text="G" />
+                                 </children>
+                              </HBox>
+                              <HBox prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: linear-gradient(to top, #121c23, #34495e);" styleClass="game-tile">
+                                 <children>
+                                    <Label text="U" />
+                                 </children>
+                              </HBox>
+                              <HBox prefHeight="100.0" prefWidth="200.0" styleClass="game-tile">
+                                 <children>
+                                    <Label text="E" />
+                                 </children>
+                              </HBox>
+                           </children>
+                        </HBox>
+                        <Label text="The letter U is not in the word at all." />
+                     </children>
+                  </VBox>
+               </children>
+               <padding>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </padding>
+            </VBox>
+            <Label id="header" text="KEYBOARD CONTROLS" />
+            <Separator prefWidth="200.0" />
+            <GridPane alignment="CENTER" hgap="10.0" vgap="10.0">
+              <columnConstraints>
+                <ColumnConstraints halignment="CENTER" hgrow="NEVER" minWidth="-Infinity" />
+                <ColumnConstraints hgrow="NEVER" minWidth="-Infinity" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="-Infinity" valignment="TOP" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="-Infinity" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <Label text="ENTER" />
+                  <Label text="ESC" GridPane.rowIndex="1" />
+                  <VBox GridPane.columnIndex="1">
+                     <children>
+                        <Label text="Submit Word" />
+                        <Label text="Start next word after a win" />
+                     </children>
+                  </VBox>
+                  <Label text="Clear your current input" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+               </children>
+            </GridPane>
+         </children>
+         <padding>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </padding>
+      </VBox>
+   </children>
+</AnchorPane>

@@ -1,0 +1,137 @@
+.root {
+    -fx-font-family: Calibri sans-serif;
+    -fx-font-size: 14px;
+    -fx-base: #34495e;
+    -fx-background-color: #34495e;
+}
+
+.separator *.line {
+    -fx-border-style: solid;
+    -fx-border-width: 1px;
+    -fx-border-color: #0092ca;
+}
+
+.label {
+    -fx-text-fill: #e4f1fe;
+}
+
+.header {
+    -fx-font-size: 24px;
+}
+
+.stats-value {
+    -fx-font-weight: bold;
+    -fx-font-size: 16px;
+    -fx-text-fill: #e4f1fe;
+}
+
+.button {
+    -fx-background-radius: 5, 4, 3, 5;
+    -fx-font-size: 12px;
+}
+
+.tile-pane {
+    -fx-pref-tile-height: 56px;
+    -fx-pref-tile-width: 56px;
+    -fx-border-color: white;
+}
+
+.game-tile {
+    -fx-border-color: #22313f;
+    -fx-border-width: 2px;
+    -fx-background-color: linear-gradient(to top, #22313f, #34495e);
+    -fx-pref-width: 56px;
+    -fx-pref-height: 56px;
+    -fx-alignment: center;
+}
+
+.game-tile .label {
+    -fx-text-fill: #e4f1fe;
+    -fx-font-weight: bold;
+    -fx-font-size: 36px;
+}
+
+.game-tile:correct {
+    -fx-background-color: linear-gradient(to top, #66ba45, #34495e);
+}
+
+.game-tile:wrong-location {
+    -fx-background-color: linear-gradient(to top, #c6c25e, #34495e);
+}
+
+.game-tile:unused {
+    -fx-background-color: linear-gradient(to top, #121c23, #34495e);
+
+}
+
+.game-tile:cursor {
+    -fx-border-color: #e4f1fe;
+}
+
+.keyboard-row {
+    -fx-spacing: 5px;
+    -fx-alignment: center;
+}
+
+.keyboard-key {
+
+    /* Button itself */
+    -fx-border-radius: 10px;
+    -fx-alignment: center;
+    -fx-background-radius: 10px;
+    -fx-background-color: #22313f;
+    -fx-pref-height: 30px;
+    -fx-pref-width: 30px;
+    -fx-padding: 0;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.6), 5, 0.0, 0, 1);
+
+    /* Button Text */
+    -fx-text-fill: #e4f1fe;
+    -fx-font-size: 24px;
+}
+
+.keyboard-key:correct {
+    -fx-background-color: linear-gradient(to top, #66ba45, #34495e);
+}
+
+.keyboard-key:unused {
+    -fx-opacity: 0.10;
+}
+
+.keyboard-key:wrong-location {
+    -fx-background-color: linear-gradient(to top, #c6c25e, #34495e);
+}
+
+.keyboard-key:hover {
+    -fx-border-color: #e4f1fe;
+}
+
+.button:pressed {
+    -fx-translate-x: 1px;
+    -fx-translate-y: 1px;
+}
+
+#status-label {
+    -fx-text-fill: #e4f1fe;
+    -fx-font-size: 24px
+}
+
+#enter-key {
+    -fx-pref-width: 85px;
+}
+
+#backspace-key {
+    -fx-pref-width: 85px;
+}
+
+.progress-bar > .track{
+
+    -fx-background-color: transparent;
+
+}
+
+.progress-bar .bar {
+    -fx-pref-height: 24px;
+    -fx-background-color: linear-gradient(to top, #121c23, #34495e);;
+
+}
