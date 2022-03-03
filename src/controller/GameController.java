@@ -19,6 +19,7 @@ import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.TilePane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import model.Guess;
 import model.Stats;
@@ -66,6 +67,8 @@ public class GameController {
     private TilePane gameplayTilePane;          // TilePane which holds all the game tiles
     @FXML
     private Label lblStatus;                    // Status label to indicate win, loss, errors
+    @FXML
+    private VBox keyboardPane;                  // The pane holding the onscreen keyboard buttons
 
     // **********************************************************************************************
     // Game tracking variables. These will be assigned and/or updated as each word is played.
@@ -140,9 +143,6 @@ public class GameController {
         // **********************************************************************************************
         initGameBoard();
 
-
-
-
         Platform.runLater(() -> {
 
             thisScene = btnHelp.getScene();
@@ -160,12 +160,36 @@ public class GameController {
             onscreenKeyboardKeys = Arrays.asList(keyQ, keyW, keyE, keyR, keyT, keyY, keyU, keyI, keyO, keyP,
                                                  keyA, keyS, keyD, keyF, keyG, keyH, keyJ, keyK, keyL,
                                                  keyZ, keyX, keyC, keyV, keyB, keyN, keyM);
+
+            // **********************************************************************************************
+            // If daily word has already been played and random words aren't allowed, disable the onscreen
+            // keyboard.
+            // **********************************************************************************************
+            if (!isDailyWord && dailyWordOnly) {
+
+                keyboardPane.setDisable(true);
+            }
+
+            // **********************************************************************************************
+            // When player exits the game, we check for forfeiture confirmation, if necessary
+            // **********************************************************************************************
+            initGameExit();
+
         });
 
         // **********************************************************************************************
-        // First run of the game, so start a new word
+        // If the daily word has already been played (so isDailyWord will be false) and game doesn't
+        // allow random words, show message to the player. Otherwise, go ahead and start a new word.
         // **********************************************************************************************
-        startNewWord();
+        if (!isDailyWord && dailyWordOnly) {
+            gameOver = true;
+            lblDailyStatus.setText("You've already played today's word!");
+            lblStatus.setText("Come back again tomorrow!");
+            lblDailyStatus.setVisible(true);
+            lblStatus.setVisible(true);
+        } else {
+            startNewWord();
+        }
     }
 
     /**
@@ -180,13 +204,18 @@ public class GameController {
         guesses.clear();
 
         // **********************************************************************************************
-        // Add 6 new guesses to the gameboard and add them to our `guesses` list
+        // Add 6 new guesses to the game board and add them to our `guesses` list
         // **********************************************************************************************
         for (int i = 0; i < 6; i++) {
             Guess guess = new Guess();
             gameplayTilePane.getChildren().addAll(guess.getGameTiles());
             guesses.add(guess);
         }
+
+        // **********************************************************************************************
+        // Enable the onscreen keyboard
+        // **********************************************************************************************
+        keyboardPane.setDisable(false);
 
     }
 
@@ -207,9 +236,8 @@ public class GameController {
                 // players cannot start a new word.
                 // **********************************************************************************************
                 if (event.getCode() == KeyCode.ENTER && !dailyWordOnly) {
-                    clearKeyBoardStates();
                     lblStatus.setVisible(false);
-                    startNewWord();
+                    handleNew();
                 }
                 return;
             }
@@ -339,12 +367,14 @@ public class GameController {
 
     }
 
+    @FXML
     private void handleBackspace() {
 
         currentGuess.removeLetter();
 
     }
 
+    @FXML
     private void handleEnter() {
 
         // **********************************************************************************************
@@ -403,8 +433,10 @@ public class GameController {
 
             if (currentGuess.getGuessString().equalsIgnoreCase(secretWord)) {
                 endGame(true);
-            } else {
+            } else if (currentGuessNum < 5) {
                 nextGuess();
+            } else {
+                endGame(false);
             }
 
         });
@@ -416,6 +448,7 @@ public class GameController {
     /**
      * Clears the current guess of all entered letters.
      */
+    @FXML
     private void handleClear() {
         currentGuess.clear();
 
@@ -438,6 +471,39 @@ public class GameController {
             }
 
         }
+        clearKeyBoardStates();
+        startNewWord();
+    }
+
+    /**
+     * Handles any actions from the onscreen keyboard. This will determine the key clicked based on the `TextProperty`
+     * and convert it to a real KeyEvent to be handled normally.
+     */
+    @FXML
+    private void handleOnscreenKeyboardPress(ActionEvent event) {
+
+        lblStatus.setVisible(false);
+
+        if (!(event.getSource() instanceof Button)) {
+            System.out.println("Not a button and this should never happen!");
+            event.consume();
+            return;
+        }
+
+        // **********************************************************************************************
+        // Determine which key was clicked and handle any non-letter keys
+        // **********************************************************************************************
+        Button sourceButton = (Button) event.getSource();
+
+        // **********************************************************************************************
+        // Listen for letter input with physical keyboard
+        // **********************************************************************************************
+        String keyPressed = ((Button) event.getSource()).getText();
+
+        if (keyPressed.length() == 1) {
+            inputLetter(keyPressed.charAt(0));
+        }
+
     }
 
     /**
@@ -471,6 +537,16 @@ public class GameController {
         gameOver = true;
 
         // **********************************************************************************************
+        // Disable the onscreen keyboard
+        // **********************************************************************************************
+        keyboardPane.setDisable(true);
+
+        // **********************************************************************************************
+        // Save the current stats
+        // **********************************************************************************************
+        saveStats(win);
+
+        // **********************************************************************************************
         // If game ended with a correct guess, animate the final guess
         // **********************************************************************************************
         if (win) {
@@ -481,13 +557,7 @@ public class GameController {
             // Display the secret word that wasn't guessed.
             // **********************************************************************************************
             setStatus("YOU LOSE! THE WORD WAS: " + secretWord);
-            startNewWord();
         }
-
-        // **********************************************************************************************
-        // Save the current stats
-        // **********************************************************************************************
-        saveStats(win);
 
         // **********************************************************************************************
         // Whether a win or a loss, we are assured the next word should not be the daily word
@@ -544,15 +614,6 @@ public class GameController {
             }
 
         }
-    }
-
-    /**
-     * Handles any actions from the onscreen keyboard. This will determine the key clicked based on the `TextProperty`
-     * and convert it to a real KeyEvent to be handled normally.
-     */
-    @FXML
-    private void handleOnscreenKeyboardPress(ActionEvent event) {
-
     }
 
     /**
@@ -642,6 +703,27 @@ public class GameController {
 
         StatsDatasource.writeStatsFile(stats);
 
+    }
+
+    private void initGameExit() {
+
+        // **********************************************************************************************
+        // When exiting the game, warn of a loss counted if the player started playing the current word
+        // but hasn't reached game over yet.
+        // **********************************************************************************************
+        thisScene.getWindow().setOnCloseRequest(event -> {
+
+            if (!gameOver && attemptMade) {
+                if (!getForfeitConfirmation()) {
+                    event.consume();
+                    return;
+                }
+            }
+
+            saveStats(false);
+            Platform.exit();
+
+        });
     }
 
     @FXML
