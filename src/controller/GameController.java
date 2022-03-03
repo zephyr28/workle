@@ -1,6 +1,7 @@
 package controller;
 
 import animatefx.animation.AnimationFX;
+import animatefx.animation.FadeIn;
 import animatefx.animation.SlideInUp;
 import controls.GameTile;
 import datasource.StatsDatasource;
@@ -534,9 +535,9 @@ public class GameController {
         if (message != null && !message.isEmpty()) {
             lblStatus.setText(message);
 
+            lblStatus.setVisible(true);
             AnimationFX animation = new SlideInUp(lblStatus);
             animation.play();
-            lblStatus.setVisible(true);
         } else {
             lblStatus.setVisible(false);
         }
