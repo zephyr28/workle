@@ -1,5 +1,4 @@
 import controller.GameController;
-import datasource.StatsDatasource;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -11,6 +10,7 @@ import java.io.IOException;
 public class Launcher extends Application {
 
     public static void main(String[] args) {
+
         launch(args);
     }
 

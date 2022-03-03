@@ -450,6 +450,7 @@ public class GameController {
      */
     @FXML
     private void handleClear() {
+
         currentGuess.clear();
 
     }
@@ -528,7 +529,22 @@ public class GameController {
 
     }
 
+    private void setStatus(String message) {
+
+        if (message != null && !message.isEmpty()) {
+            lblStatus.setText(message);
+
+            AnimationFX animation = new SlideInUp(lblStatus);
+            animation.play();
+            lblStatus.setVisible(true);
+        } else {
+            lblStatus.setVisible(false);
+        }
+
+    }
+
     private void endGame(boolean win) {
+
         currentGuessNum += 1;
 
         // **********************************************************************************************
@@ -563,20 +579,6 @@ public class GameController {
         // Whether a win or a loss, we are assured the next word should not be the daily word
         // **********************************************************************************************
         isDailyWord = false;
-    }
-
-    private void setStatus(String message) {
-
-        if (message != null && !message.isEmpty()) {
-            lblStatus.setText(message);
-
-            AnimationFX animation = new SlideInUp(lblStatus);
-            animation.play();
-            lblStatus.setVisible(true);
-        } else {
-            lblStatus.setVisible(false);
-        }
-
     }
 
     private void setKeyboardTileStates(Map<Character, TileState> letterStates) {
