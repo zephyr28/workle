@@ -39,6 +39,13 @@ public class GameController {
 
     public static final Logger logger = Logger.getLogger("GameController");
 
+    private static final String[] winMessages = {"WOW! ON YOUR FIRST TRY!",
+                                                 "SUPER!",
+                                                 "EXCELLENT!",
+                                                 "GREAT JOB!",
+                                                 "NICELY DONE!",
+                                                 "WHEW! JUST IN TIME!"};
+
     /** Statistics for the player **/
     private final Stats stats;
 
@@ -546,8 +553,6 @@ public class GameController {
 
     private void endGame(boolean win) {
 
-        currentGuessNum += 1;
-
         // **********************************************************************************************
         // Set the game over
         // **********************************************************************************************
@@ -563,23 +568,27 @@ public class GameController {
         // **********************************************************************************************
         saveStats(win);
 
+
         // **********************************************************************************************
         // If game ended with a correct guess, animate the final guess
         // **********************************************************************************************
         if (win) {
             currentGuess.playWinAnimation();
-            setStatus("YOU WON IN " + (currentGuessNum) + " GUESSES!");
+            setStatus(winMessages[currentGuessNum]);
+
         } else {
             // **********************************************************************************************
             // Display the secret word that wasn't guessed.
             // **********************************************************************************************
-            setStatus("YOU LOSE! THE WORD WAS: " + secretWord);
+            setStatus("OH NO! THE WORD WAS: " + secretWord);
         }
 
         // **********************************************************************************************
         // Whether a win or a loss, we are assured the next word should not be the daily word
         // **********************************************************************************************
         isDailyWord = false;
+        currentGuessNum += 1;
+
     }
 
     private void setKeyboardTileStates(Map<Character, TileState> letterStates) {

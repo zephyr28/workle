@@ -1,14 +1,13 @@
 package util;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import datasource.WordsDatasource;
 import model.TileState;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
+import java.util.stream.IntStream;
 
 public class WordUtil {
 
@@ -95,26 +94,60 @@ public class WordUtil {
         // **********************************************************************************************
         // Check each letter, one by one.
         // **********************************************************************************************
+        boolean[] solutionCharsTaken = new boolean[5];
+        IntStream.range(0, solutionCharsTaken.length).forEach(i -> solutionCharsTaken[i] = false);
+
         for (int i = 0; i < guessLetters.length; i++) {
 
-            boolean inWord = secretWord.contains(String.valueOf(guessLetters[i]));
+            String guessLetter = String.valueOf(guessLetters[i]);
+            String solutionLetter = String.valueOf(secretLetters[i]);
 
-            // The letter is not in the word at all.
-            if (!inWord) {
+            // **********************************************************************************************
+            // Handle correct characters first
+            // **********************************************************************************************
+            if (guessLetter.equals(solutionLetter)) {
+                states[i] = TileState.CORRECT;
+                solutionCharsTaken[i] = true;
+                continue;
+            }
+
+            // **********************************************************************************************
+            // If this letter already has a status, continue to next loop
+            // **********************************************************************************************
+//            if (states[i] == null) continue;
+
+            // **********************************************************************************************
+            // Capture the unused letters
+            // **********************************************************************************************
+            if (!secretWord.contains(guessLetter)) {
                 states[i] = TileState.UNUSED;
                 continue;
             }
 
-            // The letter is in the word and in the right place
-            if (guessLetters[i] == secretLetters[i]) {
-                states[i] = TileState.CORRECT;
-                continue;
+            // **********************************************************************************************
+            // Now we handle the present but wrong location. We need to find occurrences of this letter
+            // that are not already accounted for in solutionCharsTaken
+            // **********************************************************************************************
+            int indexOfPresentChar = -1;
+            for (int j = 0; j < 5; j++) {
+                if (guessLetter.equals(String.valueOf(secretLetters[j]))
+                    && !solutionCharsTaken[j]) {
+                    indexOfPresentChar = j;
+                    break;
+                }
             }
 
-            // The letter is in the word, but in the wrong place
-            states[i] = TileState.WRONG_LOCATION;
+            if (indexOfPresentChar > -1) {
+                states[i] = TileState.WRONG_LOCATION;
+                solutionCharsTaken[indexOfPresentChar] = true;
+            } else {
+                states[i] = TileState.UNUSED;
+            }
+
+            System.out.println("solutionCharsTaken = " + Arrays.toString(solutionCharsTaken));
 
         }
+
 
         // **********************************************************************************************
         // Return the final array
