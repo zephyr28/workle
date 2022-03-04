@@ -21,7 +21,9 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import model.Guess;
 import model.Stats;
 import model.TileState;
@@ -745,9 +747,12 @@ public class GameController {
             Stage stage = new Stage();
 
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/HelpLayout.fxml"));
+            loader.setController(new HelpController());
 
             Scene scene = new Scene(loader.load());
 
+            stage.initStyle(StageStyle.UNDECORATED);
+            stage.initModality(Modality.APPLICATION_MODAL);
             stage.initOwner(lblStatus.getScene().getWindow());
             stage.setScene(scene);
             stage.show();
@@ -768,6 +773,8 @@ public class GameController {
 
             Scene scene = new Scene(loader.load());
 
+            stage.initStyle(StageStyle.UNDECORATED);
+            stage.initModality(Modality.APPLICATION_MODAL);
             stage.initOwner(lblStatus.getScene().getWindow());
             stage.setScene(scene);
             stage.show();
