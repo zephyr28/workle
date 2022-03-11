@@ -55,11 +55,11 @@
     -fx-background-color: linear-gradient(to top, #66ba45, #34495e);
 }
 
-.game-tile:wrong-location {
+.game-tile:present {
     -fx-background-color: linear-gradient(to top, #c6c25e, #34495e);
 }
 
-.game-tile:unused {
+.game-tile:absent {
     -fx-background-color: linear-gradient(to top, #121c23, #34495e);
 
 }
@@ -94,11 +94,11 @@
     -fx-background-color: linear-gradient(to top, #66ba45, #34495e);
 }
 
-.keyboard-key:unused {
+.keyboard-key:absent {
     -fx-opacity: 0.10;
 }
 
-.keyboard-key:wrong-location {
+.keyboard-key:present {
     -fx-background-color: linear-gradient(to top, #c6c25e, #34495e);
 }
 

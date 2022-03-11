@@ -2,7 +2,7 @@ package model;
 
 public enum TileState {
     BLANK,
-    UNUSED,
+    ABSENT,
     CORRECT,
-    WRONG_LOCATION;
+    PRESENT;
 }

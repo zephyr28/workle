@@ -18,9 +18,9 @@ public class GameTile extends HBox {
     // **********************************************************************************************
     // PseudoClasses for the game tile; used to control the visual representation in game
     // **********************************************************************************************
-    public static final PseudoClass WRONG_LOCATION = PseudoClass.getPseudoClass("wrong-location");
+    public static final PseudoClass PRESENT = PseudoClass.getPseudoClass("present");
     public static final PseudoClass CORRECT = PseudoClass.getPseudoClass("correct");
-    public static final PseudoClass UNUSED = PseudoClass.getPseudoClass("unused");
+    public static final PseudoClass ABSENT = PseudoClass.getPseudoClass("absent");
     public static final PseudoClass CURSOR = PseudoClass.getPseudoClass("cursor");
 
     // **********************************************************************************************
@@ -72,19 +72,19 @@ public class GameTile extends HBox {
             // Clear the existing pseudoclasses to ensure only one style is applied. This will also reset the
             // blank tiles to the correct default style.
             // **********************************************************************************************
-            this.pseudoClassStateChanged(UNUSED, false);
+            this.pseudoClassStateChanged(ABSENT, false);
             this.pseudoClassStateChanged(CORRECT, false);
-            this.pseudoClassStateChanged(WRONG_LOCATION, false);
+            this.pseudoClassStateChanged(PRESENT, false);
 
             switch (newState) {
-                case UNUSED:
-                    this.pseudoClassStateChanged(UNUSED, true);
+                case ABSENT:
+                    this.pseudoClassStateChanged(ABSENT, true);
                     break;
                 case CORRECT:
                     this.pseudoClassStateChanged(CORRECT, true);
                     break;
-                case WRONG_LOCATION:
-                    this.pseudoClassStateChanged(WRONG_LOCATION, true);
+                case PRESENT:
+                    this.pseudoClassStateChanged(PRESENT, true);
                     break;
             }
         });

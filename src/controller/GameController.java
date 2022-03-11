@@ -1,7 +1,6 @@
 package controller;
 
 import animatefx.animation.AnimationFX;
-import animatefx.animation.FadeIn;
 import animatefx.animation.SlideInUp;
 import controls.GameTile;
 import datasource.StatsDatasource;
@@ -109,6 +108,11 @@ public class GameController {
 
     /** Has an attempt on this guess been made yet? This will be false until at least one guess has been submitted **/
     private boolean attemptMade;
+
+    /** Lists to track onscreen keyboard states; prevents them from being changed incorrectly **/
+    private List<Character> correctKeys = new ArrayList<>();
+    private List<Character> presentKeys = new ArrayList<>();
+    private List<Character> absentKeys = new ArrayList<>();
 
     /**
      * Constructor for the main game.
@@ -294,6 +298,13 @@ public class GameController {
     private void startNewWord() {
 
         // **********************************************************************************************
+        // Clear the unusedCharacters list for a new word
+        // **********************************************************************************************
+        correctKeys.clear();
+        presentKeys.clear();
+        absentKeys.clear();
+
+        // **********************************************************************************************
         // First, get the secret word to be guessed. This will either be the daily word or a random
         // word from the database.
         // **********************************************************************************************
@@ -370,8 +381,8 @@ public class GameController {
     private void clearKeyBoardStates() {
 
         for (Button keyboardKey : onscreenKeyboardKeys) {
-            keyboardKey.pseudoClassStateChanged(GameTile.UNUSED, false);
-            keyboardKey.pseudoClassStateChanged(GameTile.WRONG_LOCATION, false);
+            keyboardKey.pseudoClassStateChanged(GameTile.ABSENT, false);
+            keyboardKey.pseudoClassStateChanged(GameTile.PRESENT, false);
             keyboardKey.pseudoClassStateChanged(GameTile.CORRECT, false);
         }
 
@@ -570,7 +581,6 @@ public class GameController {
         // **********************************************************************************************
         saveStats(win);
 
-
         // **********************************************************************************************
         // If game ended with a correct guess, animate the final guess
         // **********************************************************************************************
@@ -595,39 +605,73 @@ public class GameController {
 
     private void setKeyboardTileStates(Map<Character, TileState> letterStates) {
 
-        for (Map.Entry<Character, TileState> entry : letterStates.entrySet()) {
+        PseudoClass thisPseudoClass = null;
 
-            // **********************************************************************************************
-            // First get the pseudoclass for this TileState
-            // **********************************************************************************************
-            PseudoClass thisPseudoClass = null;
-            switch (entry.getValue()) {
-                case BLANK:
-                    thisPseudoClass = GameTile.UNUSED;
-                    break;
-                case WRONG_LOCATION:
-                    thisPseudoClass = GameTile.WRONG_LOCATION;
-                    break;
-                case CORRECT:
-                    thisPseudoClass = GameTile.CORRECT;
-                    break;
+        // **********************************************************************************************
+        // For each of the letterStates passed through, we need to mark the onscreen keyboards with the
+        // appropriate styles.
+        // **********************************************************************************************
+        System.out.println("letterStates = " + letterStates);
+        for (Character character : letterStates.keySet()) {
+
+            Button onscreenKey = getKey(character);
+
+            if (onscreenKey == null) {
+                throw new NullPointerException("Bubba: \"Why did this happen?\"  Forrest: \"You got no key.\"");
             }
 
             // **********************************************************************************************
-            // If the PseudoClass is null (BLANK), do nothing. Otherwise, find the corresponding keyboard
-            // key button and update it's pseudoclass
+            // Check if the key has already been marked as CORRECT; we do not change these if the
+            // new state is ABSENT because duplicate letter in a guess could have a letterState of ABSENT
+            // even though the letter IS in the word but already accounted for.
             // **********************************************************************************************
-            if (thisPseudoClass != null) {
-                for (Button keyboardKey : onscreenKeyboardKeys) {
-                    if (keyboardKey.getText().equalsIgnoreCase(entry.getKey().toString())) {
-                        keyboardKey.pseudoClassStateChanged(GameTile.WRONG_LOCATION, false);
-                        keyboardKey.pseudoClassStateChanged(GameTile.CORRECT, false);
-                        keyboardKey.pseudoClassStateChanged(thisPseudoClass, true);
-                    }
+
+            if (!correctKeys.contains(character)) {
+                switch (letterStates.get(character)) {
+                    case CORRECT:
+                        thisPseudoClass = GameTile.CORRECT;
+                        presentKeys.remove(character);
+                        correctKeys.add(character);
+                        break;
+                    case PRESENT:
+                        thisPseudoClass = GameTile.PRESENT;
+                        presentKeys.add(character);
+                        break;
+                    case ABSENT:
+                        if (!presentKeys.contains(character)) {
+                            thisPseudoClass = GameTile.ABSENT;
+                            absentKeys.add(character);
+                        }
+                        break;
                 }
+                setKeyBoardKeyState(onscreenKey, thisPseudoClass);
             }
 
         }
+
+        // **********************************************************************************************
+        // Remark all unused keys
+        // **********************************************************************************************
+        for (Button onscreenKeyboardKey : onscreenKeyboardKeys) {
+
+            if (absentKeys.contains(onscreenKeyboardKey.getText().charAt(0))) {
+                onscreenKeyboardKey.pseudoClassStateChanged(GameTile.ABSENT, true);
+            }
+        }
+    }
+
+    private void setKeyBoardKeyState(Button onscreenKey, PseudoClass pseudoClass) {
+        onscreenKey.pseudoClassStateChanged(GameTile.ABSENT, false);
+        onscreenKey.pseudoClassStateChanged(GameTile.PRESENT, false);
+        onscreenKey.pseudoClassStateChanged(GameTile.CORRECT, false);
+        onscreenKey.pseudoClassStateChanged(pseudoClass, true);
+    }
+
+    private Button getKey(char letter) {
+
+        return onscreenKeyboardKeys.stream()
+                                   .filter(button -> button.getText().equalsIgnoreCase(String.valueOf(letter)))
+                                   .findFirst().orElse(null);
     }
 
     /**
