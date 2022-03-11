@@ -117,5 +117,15 @@ public class GameTile extends HBox {
 
         this.tileState.set(tileState);
     }
+
+    public TileState getTileState() {
+
+        return tileState.get();
+    }
+
+    public ObjectProperty<TileState> tileStateProperty() {
+
+        return tileState;
+    }
 }
 

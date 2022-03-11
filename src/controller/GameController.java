@@ -16,6 +16,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.TilePane;
@@ -55,12 +57,6 @@ public class GameController {
 
     /** List to hold the Guess objects **/
     private final List<Guess> guesses = new ArrayList<>(5);
-
-    /** Today's date **/
-    private final LocalDate today = LocalDate.now(ZoneId.systemDefault());
-
-    /** The date of the last daily word completed. This allows us to have the daily word solved only once **/
-    private final LocalDate dailyWordLastCompletedOn;
 
     /** Reference to the main game Scene **/
     private Scene thisScene;
@@ -110,9 +106,9 @@ public class GameController {
     private boolean attemptMade;
 
     /** Lists to track onscreen keyboard states; prevents them from being changed incorrectly **/
-    private List<Character> correctKeys = new ArrayList<>();
-    private List<Character> presentKeys = new ArrayList<>();
-    private List<Character> absentKeys = new ArrayList<>();
+    private final List<Character> correctKeys = new ArrayList<>();
+    private final List<Character> presentKeys = new ArrayList<>();
+    private final List<Character> absentKeys = new ArrayList<>();
 
     /**
      * Constructor for the main game.
@@ -127,10 +123,13 @@ public class GameController {
         this.stats = StatsDatasource.loadStats();
 
         /** Set the last date a daily word was completed **/
-        this.dailyWordLastCompletedOn = stats.getLastCompletedDailyWord();
+        /** The date of the last daily word completed. This allows us to have the daily word solved only once **/
+        LocalDate dailyWordLastCompletedOn = stats.getLastCompletedDailyWord();
 
         /** Compare today's date with the date a daily word was last completed; if they are the same date, then
          * we know today's word has already been played. **/
+        /** Today's date **/
+        LocalDate today = LocalDate.now(ZoneId.systemDefault());
         isDailyWord = !today.equals(dailyWordLastCompletedOn);
 
         logger.log(Level.INFO, "Initializing ...");
@@ -497,6 +496,37 @@ public class GameController {
         startNewWord();
     }
 
+    @FXML
+    private void handleShare(boolean win) {
+
+        // **********************************************************************************************
+        // If the game isn't over yet, just return
+        // **********************************************************************************************
+        if (!gameOver) {
+            return;
+        }
+
+        // **********************************************************************************************
+        // Loop through the guesses to build the output string
+        // **********************************************************************************************
+        StringBuilder results = new StringBuilder("Workle: ")
+                .append(!win ? "X" : currentGuessNum).append("/6\n\n");
+        for (int i = 0; i < currentGuessNum; i++) {
+            for (GameTile gameTile : guesses.get(i).getGameTiles()) {
+                results.appendCodePoint(gameTile.getTileState().getCodepoint());
+            }
+            results.append("\n");
+        }
+
+        ClipboardContent clipboardContent = new ClipboardContent();
+        clipboardContent.putString(results.toString());
+        Clipboard.getSystemClipboard().setContent(clipboardContent);
+        System.out.println(results.toString());
+
+
+
+    }
+
     /**
      * Handles any actions from the onscreen keyboard. This will determine the key clicked based on the `TextProperty`
      * and convert it to a real KeyEvent to be handled normally.
@@ -593,6 +623,7 @@ public class GameController {
             // Display the secret word that wasn't guessed.
             // **********************************************************************************************
             setStatus("OH NO! THE WORD WAS: " + secretWord);
+
         }
 
         // **********************************************************************************************
@@ -600,6 +631,8 @@ public class GameController {
         // **********************************************************************************************
         isDailyWord = false;
         currentGuessNum += 1;
+
+        handleShare(win);
 
     }
 
@@ -611,7 +644,6 @@ public class GameController {
         // For each of the letterStates passed through, we need to mark the onscreen keyboards with the
         // appropriate styles.
         // **********************************************************************************************
-        System.out.println("letterStates = " + letterStates);
         for (Character character : letterStates.keySet()) {
 
             Button onscreenKey = getKey(character);
