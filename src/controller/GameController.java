@@ -152,7 +152,7 @@ public class GameController {
 
         // **********************************************************************************************
         // Build the game board (this ensures the interface always displays a game board, even if the
-        // daily word has already been solved and random words are not allowed.
+        // daily word has already been solved and random words are not allowed.)
         // **********************************************************************************************
         initGameBoard();
 

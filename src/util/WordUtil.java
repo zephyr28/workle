@@ -131,10 +131,6 @@ public class WordUtil {
 
     /**
      * Checks the given guess against the secret word and returns an array to represent which letters are correct.
-     * <p>
-     * Examples:    + = Correct - = Present x = Absent
-     * <p>
-     * BOOKS ROBOT        ORBIT       BOLOS       SASSY x+--x        -x-xx       ++x-+       -xxxx
      *
      * @param guess      The full 5-letter guess to be compared with the secretWord
      * @param secretWord The secretWord to be compared against the guess
@@ -142,21 +138,15 @@ public class WordUtil {
      */
     public static TileState[] checkGuess(String guess, String secretWord) {
 
-//        secretWord = "TURNS";
-
         // **********************************************************************************************
-        // The final array to be returned
+        // The final array of `TileStates` to be returned
         // **********************************************************************************************
         TileState[] states = new TileState[5];
 
         // **********************************************************************************************
-        // Split the guess into a char array to compare with the secret word
+        // Split the guess and secreWord into a char arrays for letter-by-letter comparison
         // **********************************************************************************************
         char[] guessLetters = guess.toCharArray();
-
-        // **********************************************************************************************
-        // Split the secretWord into a char array for the same reason
-        // **********************************************************************************************
         char[] secretLetters = secretWord.toCharArray();
 
         // **********************************************************************************************
@@ -195,7 +185,7 @@ public class WordUtil {
                 if (!tileFinalized[g]) {
 
                     // **********************************************************************************************
-                    // Create boolean to track whether the tile will be marked as PRESENT.
+                    // Create boolean to track whether this tile will be marked as PRESENT.
                     // **********************************************************************************************
                     boolean markIt = false;
 
@@ -208,7 +198,6 @@ public class WordUtil {
                         // If this letter matches the solution letter, mark it to be PRESENT unless it's already CORRECT
                         // **********************************************************************************************
                         if (guessLetters[g] == secretLetters[s] && states[s] != TileState.CORRECT) {
-
                             markIt = true;
                         }
 
@@ -223,7 +212,8 @@ public class WordUtil {
                     } else {
                         // **********************************************************************************************
                         // Still not flagged means that the letter is in the word, but all occurrences are already in
-                        // the right location.
+                        // the right location. In this case, the letter is marked as ABSENT (ie: the player does not need
+                        // to find another place for this letter).
                         // **********************************************************************************************
                         states[g] = TileState.ABSENT;
                         tileFinalized[g] = true;
