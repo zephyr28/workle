@@ -230,6 +230,10 @@ public class Stats {
     public void setGenCurrentStreak(int genCurrentStreak) {
 
         this.genCurrentStreak.set(genCurrentStreak);
+
+        if (genCurrentStreak > getGenLongestStreak()) {
+            setGenLongestStreak(genCurrentStreak);
+        }
     }
 
     public IntegerProperty genCurrentStreakProperty() {
