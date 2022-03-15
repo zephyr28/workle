@@ -8,11 +8,17 @@ Certainly not perfect and still a work in progress. The logic for checking guess
 Workle 42: 6/6
 
 ⬛⬛⬛🟨🟨
+
 🟨⬛🟨🟨⬛
+
 🟨🟨⬛🟨⬛
+
 ⬛🟨⬛⬛⬛
+
 ⬛🟨🟩🟨🟩
+
 🟩🟩🟩🟩🟩
+
 
 ## Features:
 
