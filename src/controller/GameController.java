@@ -28,12 +28,14 @@ import javafx.stage.StageStyle;
 import model.Guess;
 import model.Stats;
 import model.TileState;
+import util.Util;
 import util.WordUtil;
 
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -447,7 +449,7 @@ public class GameController {
         // **********************************************************************************************
         // Update the onscreen keyboard states after the word is revealed.
         // **********************************************************************************************
-        inAnimations.get(3).setOnFinished(event -> {
+        inAnimations.get(4).setOnFinished(event -> {
 
             setKeyboardTileStates(WordUtil.getKeyboardTileStates(currentGuess.getGuessString(), secretWord));
 
@@ -496,36 +498,6 @@ public class GameController {
         startNewWord();
     }
 
-    @FXML
-    private void handleShare(boolean win) {
-
-        // **********************************************************************************************
-        // If the game isn't over yet, just return
-        // **********************************************************************************************
-        if (!gameOver) {
-            return;
-        }
-
-        // **********************************************************************************************
-        // Loop through the guesses to build the output string
-        // **********************************************************************************************
-        StringBuilder results = new StringBuilder("Workle: ")
-                .append(!win ? "X" : currentGuessNum).append("/6\n\n");
-        for (int i = 0; i < currentGuessNum; i++) {
-            for (GameTile gameTile : guesses.get(i).getGameTiles()) {
-                results.appendCodePoint(gameTile.getTileState().getCodepoint());
-            }
-            results.append("\n");
-        }
-
-        ClipboardContent clipboardContent = new ClipboardContent();
-        clipboardContent.putString(results.toString());
-        Clipboard.getSystemClipboard().setContent(clipboardContent);
-        System.out.println(results.toString());
-
-
-
-    }
 
     /**
      * Handles any actions from the onscreen keyboard. This will determine the key clicked based on the `TextProperty`
@@ -625,14 +597,19 @@ public class GameController {
             setStatus("OH NO! THE WORD WAS: " + secretWord);
 
         }
+        currentGuessNum += 1;
+
+        // **********************************************************************************************
+        // If it is the daily word, show the End Game screen to allow player to share their game
+        // **********************************************************************************************
+        if (isDailyWord) {
+            showEndGameScreen(win);
+        }
 
         // **********************************************************************************************
         // Whether a win or a loss, we are assured the next word should not be the daily word
         // **********************************************************************************************
         isDailyWord = false;
-        currentGuessNum += 1;
-
-        handleShare(win);
 
     }
 
@@ -814,6 +791,31 @@ public class GameController {
             Platform.exit();
 
         });
+    }
+
+    private void showEndGameScreen(boolean win) {
+        try {
+            Stage stage = new Stage();
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/EndGameLayout.fxml"));
+            loader.setController(new EndGameController(
+                    stats, win,
+                    (int) Util.BASE_DATE.until(LocalDate.now(), ChronoUnit.DAYS),
+                    guesses,
+                    currentGuessNum
+            ));
+
+            Scene scene = new Scene(loader.load());
+
+            stage.initStyle(StageStyle.UNDECORATED);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.initOwner(lblStatus.getScene().getWindow());
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     @FXML

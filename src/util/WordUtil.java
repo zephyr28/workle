@@ -11,12 +11,6 @@ import java.util.stream.IntStream;
 
 public class WordUtil {
 
-    /**
-     * Defines the base date to begin choosing daily words from. The number of days from this date gives us the word_id
-     * to be retrieved from the database.
-     */
-    private static final LocalDate baseDate = LocalDate.parse("2022-02-01");
-
     /** List of all words from which a game word will be selected **/
     private static final List<String> wordList = WordsDatasource.getWordList();
 
@@ -60,7 +54,7 @@ public class WordUtil {
         // **********************************************************************************************
         // The number of days between the baseDate and today is the index for today's secret word
         // **********************************************************************************************
-        long todaysWordIndex = baseDate.until(today, ChronoUnit.DAYS);
+        long todaysWordIndex = Util.BASE_DATE.until(today, ChronoUnit.DAYS);
         System.out.println("Word Index: " + todaysWordIndex);
 
         return WordsDatasource.getWordById(todaysWordIndex);

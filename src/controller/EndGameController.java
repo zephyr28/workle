@@ -1,10 +1,14 @@
 package controller;
 
+import controls.GameTile;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
-import javafx.stage.Stage;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
+import model.Guess;
 import model.Stats;
 
 import java.text.NumberFormat;
@@ -15,27 +19,38 @@ import java.util.List;
 import static util.Util.largestInt;
 import static util.Util.sumAll;
 
-public class StatsController {
+public class EndGameController {
 
+    // **********************************************************************************************
+    // FXML Controls
+    // **********************************************************************************************
     @FXML
-    private Label dailyGamesPlayed, dailyWins, dailyLosses, dailyWinPct, dailyLongestStreak, dailyCurrentStreak;
-    @FXML
-    private Label genGamesPlayed, genWins, genLosses, genWinPct, genLongestStreak, genCurrentStreak;
+    private Label lblPlayed, lblWinPct, lblCurrentStreak, lblMaxStreak;
     @FXML
     private ProgressBar bar1, bar2, bar3, bar4, bar5, bar6;
     @FXML
-    private Label lblCount1, lblCount2, lblCount3, lblCount4,lblCount5, lblCount6;
-    
-    private final Stats stats;
+    private Label lblCount1, lblCount2, lblCount3, lblCount4, lblCount5, lblCount6;
+    @FXML
+    private Button btnShare, btnClose;
 
-    public StatsController(Stats stats) {
+    private final Stats stats;
+    private final boolean win;
+    private final int gameNum;
+    private final List<Guess> guesses;
+    private final int guessNum;
+
+    public EndGameController(Stats stats, boolean win, int gameNum, List<Guess> guesses, int guessNum ) {
 
         this.stats = stats;
+        this.win = win;
+        this.gameNum = gameNum;
+        this.guesses = guesses;
+        this.guessNum = guessNum;
     }
 
     @FXML
     private void initialize() {
-        
+
         initBindings();
         initProgressBars();
 
@@ -43,25 +58,15 @@ public class StatsController {
 
     private void initBindings() {
 
-        dailyGamesPlayed.textProperty().bind(stats.dailyGamesPlayedProperty().asString());
-        dailyWins.textProperty().bind(stats.dailyWinsProperty().asString());
-        dailyLosses.textProperty().bind(stats.dailyLossesProperty().asString());
-        dailyLongestStreak.textProperty().bind(stats.dailyLongestStreakProperty().asString());
-        dailyCurrentStreak.textProperty().bind(stats.dailyCurrentStreakProperty().asString());
-
-        genGamesPlayed.textProperty().bind(stats.genGamesPlayedProperty().asString());
-        genWins.textProperty().bind(stats.genWinsProperty().asString());
-        genLosses.textProperty().bind(stats.genLossesProperty().asString());
-        genLongestStreak.textProperty().bind(stats.genLongestStreakProperty().asString());
-        genCurrentStreak.textProperty().bind(stats.genCurrentStreakProperty().asString());
+        lblPlayed.setText(String.valueOf(stats.getDailyGamesPlayed()));
+        lblCurrentStreak.setText(String.valueOf(stats.getDailyCurrentStreak()));
+        lblMaxStreak.setText(String.valueOf(stats.getDailyLongestStreak()));
 
         // **********************************************************************************************
         // Set the percentage labels for win %
         // **********************************************************************************************
         NumberFormat nf = NumberFormat.getPercentInstance();
-        dailyWinPct.setText(nf.format(stats.getDailyWinPct()));
-        genWinPct.setText(nf.format(stats.getGenWinPct()));
-
+        lblWinPct.setText(nf.format(stats.getDailyWinPct()));
 
     }
 
@@ -105,9 +110,33 @@ public class StatsController {
     }
 
     @FXML
+    private void handleShare() {
+
+        // **********************************************************************************************
+        // Loop through the guesses to build the output string
+        // **********************************************************************************************
+        StringBuilder results = new StringBuilder("Workle ").append(gameNum).append(": ")
+                .append(!win ? "X" : guessNum).append("/6\n\n");
+        for (int i = 0; i < guessNum; i++) {
+            for (GameTile gameTile : guesses.get(i).getGameTiles()) {
+                results.appendCodePoint(gameTile.getTileState().getCodepoint());
+            }
+            results.append("\n");
+        }
+
+        ClipboardContent clipboardContent = new ClipboardContent();
+        clipboardContent.putString(results.toString());
+        Clipboard.getSystemClipboard().setContent(clipboardContent);
+        System.out.println(results.toString());
+
+
+
+    }
+
+    @FXML
     void handleClose(ActionEvent event) {
 
-        ((Stage) dailyCurrentStreak.getScene().getWindow()).close();
+        btnClose.getScene().getWindow().hide();
 
     }
 
