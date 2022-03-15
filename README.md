@@ -5,6 +5,20 @@ Certainly not perfect and still a work in progress. The logic for checking guess
 
 ![image](https://user-images.githubusercontent.com/24708466/158309317-60a48eac-5777-443e-afda-e51f18ceb8c8.png)
 
+Workle 42: 6/6
+
+⬛⬛⬛🟨🟨
+
+🟨⬛🟨🟨⬛
+
+🟨🟨⬛🟨⬛
+
+⬛🟨⬛⬛⬛
+
+⬛🟨🟩🟨🟩
+
+🟩🟩🟩🟩🟩
+
 
 ## Features:
 
