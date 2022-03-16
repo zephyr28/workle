@@ -1,6 +1,7 @@
 package controller;
 
 import controls.GameTile;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -21,6 +22,11 @@ import static util.Util.sumAll;
 
 public class EndGameController {
 
+    private final Stats stats;
+    private final boolean win;
+    private final int gameNum;
+    private final List<Guess> guesses;
+    private final int guessNum;
     // **********************************************************************************************
     // FXML Controls
     // **********************************************************************************************
@@ -33,13 +39,7 @@ public class EndGameController {
     @FXML
     private Button btnShare, btnClose;
 
-    private final Stats stats;
-    private final boolean win;
-    private final int gameNum;
-    private final List<Guess> guesses;
-    private final int guessNum;
-
-    public EndGameController(Stats stats, boolean win, int gameNum, List<Guess> guesses, int guessNum ) {
+    public EndGameController(Stats stats, boolean win, int gameNum, List<Guess> guesses, int guessNum) {
 
         this.stats = stats;
         this.win = win;
@@ -106,7 +106,6 @@ public class EndGameController {
             labels.get(i).setText(String.valueOf(counts[i]));
         }
 
-
     }
 
     @FXML
@@ -116,7 +115,7 @@ public class EndGameController {
         // Loop through the guesses to build the output string
         // **********************************************************************************************
         StringBuilder results = new StringBuilder("Workle ").append(gameNum).append(": ")
-                .append(!win ? "X" : guessNum).append("/6\n\n");
+                                                            .append(!win ? "X" : guessNum).append("/6\n\n");
         for (int i = 0; i < guessNum; i++) {
             for (GameTile gameTile : guesses.get(i).getGameTiles()) {
                 results.appendCodePoint(gameTile.getTileState().getCodepoint());
@@ -129,7 +128,19 @@ public class EndGameController {
         Clipboard.getSystemClipboard().setContent(clipboardContent);
         System.out.println(results.toString());
 
-
+        // **********************************************************************************************
+        // Update button text to confirm the data was copied to the clipboard
+        // **********************************************************************************************
+        btnShare.setText("Copied to clipboard!");
+        Thread timerThread = new Thread(() -> {
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException ex) {
+                ex.printStackTrace();
+            }
+            Platform.runLater(() -> btnShare.setText("Share"));
+        });
+        timerThread.start();
 
     }
 

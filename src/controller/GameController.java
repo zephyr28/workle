@@ -603,7 +603,15 @@ public class GameController {
         // If it is the daily word, show the End Game screen to allow player to share their game
         // **********************************************************************************************
         if (isDailyWord) {
-            showEndGameScreen(win);
+            Thread timerThread = new Thread(() -> {
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                }
+                Platform.runLater(() -> showEndGameScreen(win));
+            });
+            timerThread.start();
         }
 
         // **********************************************************************************************
