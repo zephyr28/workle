@@ -334,25 +334,23 @@ public class Stats {
     @Override
     public String toString() {
 
-        final StringBuilder sb = new StringBuilder("Stats{");
-        sb.append("lastCompletedDailyWord=").append(lastCompletedDailyWord);
-        sb.append(", dailyGamesPlayed=").append(dailyGamesPlayed);
-        sb.append(", dailyWins=").append(dailyWins);
-        sb.append(", dailyLosses=").append(dailyLosses);
-        sb.append(", dailyLongestStreak=").append(dailyLongestStreak);
-        sb.append(", dailyCurrentStreak=").append(dailyCurrentStreak);
-        sb.append(", genGamesPlayed=").append(genGamesPlayed);
-        sb.append(", genWins=").append(genWins);
-        sb.append(", genLosses=").append(genLosses);
-        sb.append(", genLongestStreak=").append(genLongestStreak);
-        sb.append(", genCurrentStreak=").append(genCurrentStreak);
-        sb.append(", guessCount1=").append(guessCount1);
-        sb.append(", guessCount2=").append(guessCount2);
-        sb.append(", guessCount3=").append(guessCount3);
-        sb.append(", guessCount4=").append(guessCount4);
-        sb.append(", guessCount5=").append(guessCount5);
-        sb.append(", guessCount6=").append(guessCount6);
-        sb.append('}');
-        return sb.toString();
+        return "Stats{" + "lastCompletedDailyWord=" + lastCompletedDailyWord +
+               ", dailyGamesPlayed=" + dailyGamesPlayed +
+               ", dailyWins=" + dailyWins +
+               ", dailyLosses=" + dailyLosses +
+               ", dailyLongestStreak=" + dailyLongestStreak +
+               ", dailyCurrentStreak=" + dailyCurrentStreak +
+               ", genGamesPlayed=" + genGamesPlayed +
+               ", genWins=" + genWins +
+               ", genLosses=" + genLosses +
+               ", genLongestStreak=" + genLongestStreak +
+               ", genCurrentStreak=" + genCurrentStreak +
+               ", guessCount1=" + guessCount1 +
+               ", guessCount2=" + guessCount2 +
+               ", guessCount3=" + guessCount3 +
+               ", guessCount4=" + guessCount4 +
+               ", guessCount5=" + guessCount5 +
+               ", guessCount6=" + guessCount6 +
+               '}';
     }
 }

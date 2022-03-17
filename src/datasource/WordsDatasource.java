@@ -17,7 +17,7 @@ public class WordsDatasource {
 
         try (Connection connection = getConnection();
              Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery(query);) {
+             ResultSet resultSet = statement.executeQuery(query)) {
 
             while (resultSet.next()) {
                 dict.add(resultSet.getString(1).toUpperCase());
@@ -41,7 +41,7 @@ public class WordsDatasource {
 
         try (Connection connection = getConnection();
              Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery(query);) {
+             ResultSet resultSet = statement.executeQuery(query)) {
 
             while (resultSet.next()) {
                 wordList.add(resultSet.getString(1).toUpperCase());

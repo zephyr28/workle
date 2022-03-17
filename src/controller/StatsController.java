@@ -68,13 +68,13 @@ public class StatsController {
     private void initProgressBars() {
 
         // **********************************************************************************************
-        // Add controls to Lists so they're easier to work with in loops
+        // Add controls to Lists, so they're easier to work with in loops
         // **********************************************************************************************
         List<ProgressBar> bars = new ArrayList<>(Arrays.asList(bar1, bar2, bar3, bar4, bar5, bar6));
         List<Label> labels = new ArrayList<>(Arrays.asList(lblCount1, lblCount2, lblCount3, lblCount4, lblCount5, lblCount6));
 
         // **********************************************************************************************
-        // First, determine total number of guesses so we can size the bars correctly
+        // First, determine total number of guesses, so we can size the bars correctly
         // **********************************************************************************************
         int[] counts = new int[6];
         counts[0] = stats.getGuessCount1();
@@ -91,7 +91,7 @@ public class StatsController {
         // **********************************************************************************************
         for (int i = 0; i < bars.size(); i++) {
 
-            ((ProgressBar) bars.get(i)).setProgress((float) counts[i] / largestCount);
+            bars.get(i).setProgress((float) counts[i] / largestCount);
         }
 
         // **********************************************************************************************

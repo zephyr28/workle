@@ -3,7 +3,6 @@ package util;
 import datasource.WordsDatasource;
 import model.TileState;
 
-import javax.swing.*;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -193,6 +192,7 @@ public class WordUtil {
                         // **********************************************************************************************
                         if (guessLetters[g] == secretLetters[s] && states[s] != TileState.CORRECT) {
                             markIt = true;
+                            break;
                         }
 
                     }
@@ -202,7 +202,6 @@ public class WordUtil {
                     // **********************************************************************************************
                     if (markIt) {
                         states[g] = TileState.PRESENT;
-                        tileFinalized[g] = true;
                     } else {
                         // **********************************************************************************************
                         // Still not flagged means that the letter is in the word, but all occurrences are already in
@@ -210,8 +209,8 @@ public class WordUtil {
                         // to find another place for this letter).
                         // **********************************************************************************************
                         states[g] = TileState.ABSENT;
-                        tileFinalized[g] = true;
                     }
+                    tileFinalized[g] = true;
 
                 }
 

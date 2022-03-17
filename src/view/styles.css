@@ -51,6 +51,7 @@
     -fx-font-size: 36px;
 }
 
+/*noinspection CssInvalidPseudoSelector*/
 .game-tile:correct {
     -fx-background-color: linear-gradient(to top, #66ba45, #34495e);
 }

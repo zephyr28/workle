@@ -13,16 +13,17 @@ public class Launcher extends Application {
 
     public static void main(String[] args) {
         for (String arg : args) {
-            if (arg.equalsIgnoreCase("-unlimited")){
+            if (arg.equalsIgnoreCase("-unlimited")) {
                 dailyWordOnly = false;
 
+                break;
             }
         }
         launch(args);
     }
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage) {
 
 
 

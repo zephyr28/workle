@@ -66,7 +66,7 @@ public class GameController {
     private final List<Character> presentKeys = new ArrayList<>();
     private final List<Character> absentKeys = new ArrayList<>();
     /** Reference to the main game Stage and Scene **/
-    private Stage gameStage;
+    private final Stage gameStage;
     private Scene thisScene;
     // **********************************************************************************************
     // FXML elements
@@ -89,7 +89,7 @@ public class GameController {
     private Button keyQ, keyW, keyE, keyR, keyT, keyY, keyU, keyI, keyO, keyP, keyBackspace,
             keyA, keyS, keyD, keyF, keyG, keyH, keyJ, keyK, keyL, keyClear,
             keyZ, keyX, keyC, keyV, keyB, keyN, keyM, keyEnter;
-    /** List to hold all of the onscreen keyboard buttons; used to update the visual style **/
+    /** List to hold all the onscreen keyboard buttons; used to update the visual style **/
     private List<Button> onscreenKeyboardKeys;
     /** The secret word for the current game **/
     private String secretWord;
@@ -114,7 +114,9 @@ public class GameController {
         this.dailyWordOnly = dailyWordOnly;
         this.gameStage = primaryStage;
 
-        /** Load the stats from the stats.dat file **/
+        // **********************************************************************************************
+        // Load the stats from the stats.dat file
+        // **********************************************************************************************
         this.stats = StatsDatasource.loadStats();
 
         /** Set the last date a daily word was completed **/
@@ -228,7 +230,7 @@ public class GameController {
     }
 
     /**
-     * Initialize the KeyEventListener so the game will respond to keys pressed on the physical keyboard
+     * Initialize the KeyEventListener so the game will respond to key pressed on the physical keyboard
      */
     private void initPhysicalKeyboard() {
 

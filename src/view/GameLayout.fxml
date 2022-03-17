@@ -20,7 +20,7 @@
                 <VBox alignment="TOP_CENTER" spacing="5.0" BorderPane.alignment="CENTER">
                     <children>
                   <Label id="status-label" fx:id="lblDailyStatus" text="Label" />
-                  <TilePane fx:id="gameplayTilePane" alignment="TOP_CENTER" hgap="5.0" maxWidth="350.0" minHeight="-Infinity" minWidth="350.0" prefRows="6" prefTileHeight="56.0" prefTileWidth="56.0" prefWidth="350.0" stylesheets="@../styles.css" vgap="5.0" />
+                  <TilePane fx:id="gameplayTilePane" alignment="TOP_CENTER" hgap="5.0" maxWidth="350.0" minHeight="-Infinity" minWidth="350.0" prefRows="6" prefTileHeight="56.0" prefTileWidth="56.0" prefWidth="350.0" stylesheets="@styles.css" vgap="5.0" />
                   <Label id="status-label" fx:id="lblStatus" text="Label" />
                     </children>
                     <BorderPane.margin>
@@ -126,6 +126,9 @@
                                        </image>
                                     </ImageView>
                                  </graphic>
+                                 <tooltip>
+                                    <Tooltip text="HELP / ABOUT" />
+                                 </tooltip>
                               </Button>
                               <Button fx:id="btnHelp1" contentDisplay="GRAPHIC_ONLY" disable="true" mnemonicParsing="false" onAction="#showHelp" text="HELP" visible="false">
                                  <graphic>
@@ -157,6 +160,9 @@
                                        </image>
                                     </ImageView>
                                  </graphic>
+                                 <tooltip>
+                                    <Tooltip text="STATS" />
+                                 </tooltip>
                               </Button>
                               <Button fx:id="btnNew" contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" onAction="#handleNew" text="NEW">
                                  <graphic>
@@ -166,6 +172,9 @@
                                        </image>
                                     </ImageView>
                                  </graphic>
+                                 <tooltip>
+                                    <Tooltip text="NEW GAME" />
+                                 </tooltip>
                               </Button>
                            </children>
                         </HBox>
