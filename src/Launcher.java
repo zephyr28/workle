@@ -25,9 +25,10 @@ public class Launcher extends Application {
 
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("view/GameLayout.fxml"));
-            loader.setController(new GameController(false));
+            loader.setController(new GameController(false, primaryStage));
 
             Scene scene = new Scene(loader.load());
+            primaryStage.setResizable(false);
 
             primaryStage.setScene(scene);
 

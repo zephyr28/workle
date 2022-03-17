@@ -7,6 +7,8 @@ import datasource.StatsDatasource;
 import javafx.animation.Animation;
 import javafx.animation.SequentialTransition;
 import javafx.application.Platform;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.css.PseudoClass;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -16,8 +18,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
-import javafx.scene.input.Clipboard;
-import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.TilePane;
@@ -59,10 +59,15 @@ public class GameController {
 
     /** List to hold the Guess objects **/
     private final List<Guess> guesses = new ArrayList<>(5);
-
-    /** Reference to the main game Scene **/
+    private final DoubleProperty stageX = new SimpleDoubleProperty();
+    private final DoubleProperty stageY = new SimpleDoubleProperty();
+    /** Lists to track onscreen keyboard states; prevents them from being changed incorrectly **/
+    private final List<Character> correctKeys = new ArrayList<>();
+    private final List<Character> presentKeys = new ArrayList<>();
+    private final List<Character> absentKeys = new ArrayList<>();
+    /** Reference to the main game Stage and Scene **/
+    private Stage gameStage;
     private Scene thisScene;
-
     // **********************************************************************************************
     // FXML elements
     // **********************************************************************************************
@@ -76,7 +81,6 @@ public class GameController {
     private Label lblStatus;                    // Status label to indicate win, loss, errors
     @FXML
     private VBox keyboardPane;                  // The pane holding the onscreen keyboard buttons
-
     // **********************************************************************************************
     // Game tracking variables. These will be assigned and/or updated as each word is played.
     // They will be reset whenever starting a new game/word.
@@ -85,41 +89,30 @@ public class GameController {
     private Button keyQ, keyW, keyE, keyR, keyT, keyY, keyU, keyI, keyO, keyP, keyBackspace,
             keyA, keyS, keyD, keyF, keyG, keyH, keyJ, keyK, keyL, keyClear,
             keyZ, keyX, keyC, keyV, keyB, keyN, keyM, keyEnter;
-
     /** List to hold all of the onscreen keyboard buttons; used to update the visual style **/
     private List<Button> onscreenKeyboardKeys;
-
     /** The secret word for the current game **/
     private String secretWord;
-
     /** Is the current word the word-of-the-day? **/
     private boolean isDailyWord;
-
     /** The current Guess object being used **/
     private Guess currentGuess;
-
     /** The current guess # (zero-based) **/
     private int currentGuessNum = 0;
-
     /** Is the current game over or still accepting guesses? **/
     private boolean gameOver;
-
     /** Has an attempt on this guess been made yet? This will be false until at least one guess has been submitted **/
     private boolean attemptMade;
-
-    /** Lists to track onscreen keyboard states; prevents them from being changed incorrectly **/
-    private final List<Character> correctKeys = new ArrayList<>();
-    private final List<Character> presentKeys = new ArrayList<>();
-    private final List<Character> absentKeys = new ArrayList<>();
 
     /**
      * Constructor for the main game.
      *
      * @param dailyWordOnly Is the game locked down to only allow playing the daily word?
      */
-    public GameController(boolean dailyWordOnly) {
+    public GameController(boolean dailyWordOnly, Stage primaryStage) {
 
         this.dailyWordOnly = dailyWordOnly;
+        this.gameStage = primaryStage;
 
         /** Load the stats from the stats.dat file **/
         this.stats = StatsDatasource.loadStats();
@@ -498,7 +491,6 @@ public class GameController {
         startNewWord();
     }
 
-
     /**
      * Handles any actions from the onscreen keyboard. This will determine the key clicked based on the `TextProperty`
      * and convert it to a real KeyEvent to be handled normally.
@@ -605,7 +597,7 @@ public class GameController {
         if (isDailyWord) {
             Thread timerThread = new Thread(() -> {
                 try {
-                    Thread.sleep(2000);
+                    Thread.sleep(1500);
                 } catch (InterruptedException ex) {
                     ex.printStackTrace();
                 }
@@ -678,6 +670,7 @@ public class GameController {
     }
 
     private void setKeyBoardKeyState(Button onscreenKey, PseudoClass pseudoClass) {
+
         onscreenKey.pseudoClassStateChanged(GameTile.ABSENT, false);
         onscreenKey.pseudoClassStateChanged(GameTile.PRESENT, false);
         onscreenKey.pseudoClassStateChanged(GameTile.CORRECT, false);
@@ -802,6 +795,7 @@ public class GameController {
     }
 
     private void showEndGameScreen(boolean win) {
+
         try {
             Stage stage = new Stage();
 
@@ -819,7 +813,7 @@ public class GameController {
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.initOwner(lblStatus.getScene().getWindow());
             stage.setScene(scene);
-            stage.show();
+            showPopupStage(stage);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -841,11 +835,29 @@ public class GameController {
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.initOwner(lblStatus.getScene().getWindow());
             stage.setScene(scene);
-            stage.show();
+            showPopupStage(stage);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
+    }
+
+    private void showPopupStage(final Stage childStage) {
+
+        childStage.setX(stageX.get() + gameStage.getWidth() / 2 - childStage.getWidth() / 2);
+        childStage.setY(stageY.get() + gameStage.getHeight() / 2 - childStage.getHeight() / 2);
+
+        double centerXPosition = gameStage.getX() + gameStage.getWidth() / 2d;
+        double centerYPosition = gameStage.getY() + gameStage.getWidth() / 2d;
+
+        childStage.setOnShowing(event -> childStage.hide());
+        childStage.setOnShown(event -> {
+            childStage.setX(centerXPosition - childStage.getWidth() / 2d);
+            childStage.setY(centerYPosition - childStage.getHeight() / 2d);
+            childStage.show();
+        });
+
+        childStage.showAndWait();
     }
 
     @FXML
@@ -863,7 +875,7 @@ public class GameController {
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.initOwner(lblStatus.getScene().getWindow());
             stage.setScene(scene);
-            stage.show();
+            showPopupStage(stage);
         } catch (IOException e) {
             e.printStackTrace();
         }
