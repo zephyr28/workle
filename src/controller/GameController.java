@@ -788,9 +788,9 @@ public class GameController {
                     event.consume();
                     return;
                 }
+                saveStats(false);
             }
 
-            saveStats(false);
             Platform.exit();
 
         });
