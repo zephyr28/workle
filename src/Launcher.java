@@ -9,13 +9,22 @@ import java.io.IOException;
 
 public class Launcher extends Application {
 
-    public static void main(String[] args) {
+    private static boolean dailyWordOnly = true;
 
+    public static void main(String[] args) {
+        for (String arg : args) {
+            if (arg.equalsIgnoreCase("-unlimited")){
+                dailyWordOnly = false;
+
+            }
+        }
         launch(args);
     }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+
+
 
         // **********************************************************************************************
         // Configure the stage
@@ -25,7 +34,7 @@ public class Launcher extends Application {
 
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("view/GameLayout.fxml"));
-            loader.setController(new GameController(false, primaryStage));
+            loader.setController(new GameController(dailyWordOnly, primaryStage));
 
             Scene scene = new Scene(loader.load());
             primaryStage.setResizable(false);

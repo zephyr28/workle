@@ -15,7 +15,16 @@
 
 <AnchorPane style="-fx-border-color: white;" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <VBox alignment="TOP_CENTER">
+      <Button fx:id="btnClose" contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" onAction="#handleClose" styleClass="icon-button" text="Button" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
+         <graphic>
+            <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../resources/icons/close.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </Button>
+      <VBox alignment="TOP_CENTER" spacing="10.0">
          <children>
             <HBox>
                <children>
@@ -179,6 +188,8 @@
                   </VBox>
                </children>
             </HBox>
+            <Separator prefWidth="200.0" />
+            <Label text="Wordle clone created by Nathan Rossin, 2022" />
          </children>
          <opaqueInsets>
             <Insets />
@@ -187,14 +198,5 @@
             <Insets bottom="10.0" />
          </padding>
       </VBox>
-      <Button fx:id="btnClose" contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" onAction="#handleClose" styleClass="icon-button" text="Button" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
-         <graphic>
-            <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../resources/icons/close.png" />
-               </image>
-            </ImageView>
-         </graphic>
-      </Button>
    </children>
 </AnchorPane>
